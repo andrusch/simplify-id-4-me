@@ -1,0 +1,33 @@
+tasks:
+  - init: | 
+      nodeversion=$(cat .nvmrc)
+      nvm install $nodeversion
+      nvm use $nodeversion
+      npm install && npm run build
+    command: npm run dev
+
+vscode:
+    extensions:
+        - bierner.markdown-image-size
+        - esbenp.prettier-vscode
+        - yzhang.markdown-all-in-one
+        - vscode.markdown-language-features
+        - docsmsft.docs-markdown
+        - DavidAnson.vscode-markdownlint
+        - bierner.markdown-yaml-preamble
+        - vscode.markdown-math
+        - bierner.markdown-emoji
+        - TakumiI.markdowntable
+        - bierner.emojisense
+        - bierner.markdown-checkbox
+        - bierner.markdown-image-size
+        - bierner.markdown-mermaid
+        - bierner.markdown-footnotes
+        - wayou.vscode-todo-highlight
+        - vscode-icons-team.vscode-icons
+        - dbaeumer.vscode-eslint
+
+ports:
+    - name: Web Site
+      port: 3000
+      visibility: public
