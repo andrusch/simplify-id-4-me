@@ -21,7 +21,14 @@ export function ClientIdForm() {
         Enter a PKCE enable OAUTH Client ID to get started. If you do not have
         one, use something like AWS Cognito to create one.
       </p>
+      <input
+          type="text"
+          placeholder="OpenID Configuration URL"
+          aria-label="OpenID Configuration URL"
+          className="block w-full rounded-2xl border border-neutral-300 bg-transparent py-4 pl-6 pr-20 text-base/6 text-neutral-950 ring-4 ring-transparent transition placeholder:text-neutral-500 focus:border-neutral-950 focus:outline-none focus:ring-neutral-950/5"
+        />
       <div className="relative mt-6">
+        
         <input
           type="text"
           placeholder="Client ID"
