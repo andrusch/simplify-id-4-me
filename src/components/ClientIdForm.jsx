@@ -41,9 +41,10 @@ const ClientIdForm = (props) => {
       if (token)
         console.log('refreshing token');
       if (await oidcClient.hasToken()) {      
-        const t = await oidcClient.getToken();
-        setToken(t);
-        onTokenUpdate(t);
+        const tokenResponse = await oidcClient.getToken();
+        const userInfo = await oidcClient.fetchUserInfo();
+        setToken({tokenResponse, userInfo});
+        onTokenUpdate({ tokenResponse, userInfo});
       }
   }
   }, [token, clientId, oidcUrl, setToken, onTokenUpdate]);

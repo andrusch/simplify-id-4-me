@@ -97,6 +97,20 @@ function IdToken(props) {
   )
 }
 
+function UserInfo(props) {
+  const { userInfo } = props;
+  return (
+    <Section title="User Info" image={{ src: imageLaptop, shape: 1 }}>
+      <div className="space-y-6 text-base text-neutral-600">
+        <p>
+          Here's what returns from the user info endpoint.
+        </p>
+        <JsonViewer value={userInfo} />
+      </div>
+    </Section>
+  )
+}
+
 function Values() {
   return (
     <div className="relative mt-24 pt-24 sm:mt-32 sm:pt-32 lg:mt-40 lg:pt-40">
@@ -157,16 +171,17 @@ const PKCE = () => {
   return (
     <>
       <PageIntro eyebrow="OpenID Connect with PKCE" title={title}>
-        {<ClientIdForm onTokenUpdate={(t) => {setTokenResponse(t);}} /> }
-        {tokenResponse && <SuccessMessage />}
+        {!tokenResponse && <ClientIdForm onTokenUpdate={(t) => {setTokenResponse(t);}} /> }
+        {tokenResponse && tokenResponse.tokenResponse && <SuccessMessage />}
       </PageIntro>
 
-      {tokenResponse && (
+      {tokenResponse && tokenResponse.tokenResponse && (
         <>
           <div className="mt-24 space-y-24 [counter-reset:section] sm:mt-32 sm:space-y-32 lg:mt-40 lg:space-y-40">
             <TokenResponse token={tokenResponse} />
-            {tokenResponse && tokenResponse.access_token && <AccessToken token={tokenResponse.access_token }/> }
-            {tokenResponse && tokenResponse.id_token && <IdToken token={tokenResponse.id_token }/> }
+            {tokenResponse && tokenResponse.tokenResponse.access_token && <AccessToken token={tokenResponse.tokenResponse.access_token }/> }
+            {tokenResponse && tokenResponse.tokenResponse.id_token && <IdToken token={tokenResponse.tokenResponse.id_token }/> }
+            {tokenResponse && tokenResponse.userInfo && <UserInfo userInfo={tokenResponse.userInfo }/> }
           </div>
 
           {/* <Values /> */}
