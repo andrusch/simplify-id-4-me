@@ -103,7 +103,7 @@ function UserInfo(props) {
     <Section title="User Info" image={{ src: imageLaptop, shape: 1 }}>
       <div className="space-y-6 text-base text-neutral-600">
         <p>
-          Here's what returns from the user info endpoint.
+          Here&apos;s what returns from the user info endpoint.
         </p>
         <JsonViewer value={userInfo} />
       </div>
