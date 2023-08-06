@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react';
-import { OidcClient } from '@pingidentity-developers-experience/ping-oidc-client-sdk';
+import dynamic from 'next/dynamic';
 
 export function ArrowIcon(props) {
   return (
@@ -21,13 +21,22 @@ const clientOptions = (client_id) => { return {
   scope: 'openid profile'
 }};
 
-export function ClientIdForm(props) {
+const ClientIdForm = (props) => {
   const { onTokenUpdate } = props;
-  const [oidcUrl, setOidcUrl] = useState(sessionStorage.getItem('OIDC_URL') ?? '');
-  const [clientId, setClientId] = useState(sessionStorage.getItem('CLIENT_ID') ?? '');
+  const [oidcUrl, setOidcUrl] = useState('');
+  const [clientId, setClientId] = useState('');
   const [token, setToken] = useState(undefined);
-  const checkForToken = useCallback(async () => {  
+  useEffect(() => {
+    const cachedOidcUrl = sessionStorage.getItem('OIDC_URL');
+    if (cachedOidcUrl)
+      setOidcUrl(cachedOidcUrl);    
+    const cachedClientId = sessionStorage.getItem('CLIENT_ID');
+    if (cachedClientId)
+      setClientId(cachedClientId);
+  }, []);
+  const checkForToken = useCallback(async () => {      
     if (window.location.search.match(/\?code=/gi) && oidcUrl && clientId) {
+      const { OidcClient } = await import('@pingidentity-developers-experience/ping-oidc-client-sdk')
       const oidcClient = await OidcClient.initializeFromOpenIdConfig(oidcUrl, clientOptions(clientId));
       if (token)
         console.log('refreshing token');
@@ -38,7 +47,7 @@ export function ClientIdForm(props) {
       }
   }
   }, [token, clientId, oidcUrl, setToken, onTokenUpdate]);
-  useEffect(() => {
+  useEffect(() => {    
     checkForToken();
   }, [token, checkForToken]);
   return (
@@ -78,10 +87,12 @@ export function ClientIdForm(props) {
             type="button"
             aria-label="Submit"
             className="flex aspect-square h-full items-center justify-center rounded-xl bg-neutral-950 text-white transition hover:bg-neutral-800"
-            onClick={async () => {
+            onClick={async () => {              
+                const { OidcClient } = await import('@pingidentity-developers-experience/ping-oidc-client-sdk')
+    
               // // Initialize the library using an authentication server's well-known endpoint. Note this takes in the base url of the auth server, not the well-known endpoint itself. '/.well-known/openid-configuration' will be appended to the url by the SDK.
               const oidcClient = await OidcClient.initializeFromOpenIdConfig(oidcUrl, clientOptions(clientId));
-              // // Used to authorize a user. Note this will use window.location.assign, thus redirecting the user after the url is generated.
+              // // // Used to authorize a user. Note this will use window.location.assign, thus redirecting the user after the url is generated.
               oidcClient.authorize(/* optional login_hint */);
             }}
           >
@@ -92,23 +103,5 @@ export function ClientIdForm(props) {
     </form>
   )
 }
-export const SuccessMessage = () => {
-  const [oidcUrl, setOidcUrl] = useState(sessionStorage.getItem('OIDC_URL') ?? '');
-  const [clientId, setClientId] = useState(sessionStorage.getItem('CLIENT_ID') ?? '');
-  return (
-    <>
-      <h2 className="font-display text-sm font-semibold tracking-wider text-neutral-950">
-        Look through your token response.
-      </h2>
-      <p className="mt-4 text-sm text-neutral-700">
-        Scroll down to learn more about your token response.        
-      </p>
-      <p className="mt-4 text-sm text-neutral-700">
-        OpenId Connect: <strong className="font-semibold text-neutral-950">{oidcUrl}</strong>
-      </p>
-      <p className="mt-4 text-sm text-neutral-700">
-        Client Id: <strong className="font-semibold text-neutral-950">{clientId}</strong>
-      </p>      
-    </>
-  )
-}
+
+export default ClientIdForm;

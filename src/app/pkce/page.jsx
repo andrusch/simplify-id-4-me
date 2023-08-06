@@ -8,9 +8,11 @@ import { SectionIntro } from '@/components/SectionIntro'
 import { StylizedImage } from '@/components/StylizedImage'
 import imageLaptop from '@/images/laptop.jpg'
 import imageWhiteboard from '@/images/whiteboard.jpg'
-import { ClientIdForm, SuccessMessage } from './components/client-id-form'
+import { SuccessMessage } from '../../components/ClientIdFormSuccess'
 import { useState } from 'react';
 import { JsonViewer } from '@textea/json-viewer';
+import { dynamic } from 'next/dynamic';
+import ClientIdForm from '../../components/ClientIdForm';
 
 function Section({ title, image, children }) {
   return (
@@ -149,14 +151,13 @@ function Values() {
     </div>
   )
 }
-
-export default function Process() {  
+const PKCE = () => {  
   const [tokenResponse, setTokenResponse] = useState('');
   const title=tokenResponse ? "Awesome, it worked!" :  "Learn how it works";
   return (
     <>
       <PageIntro eyebrow="OpenID Connect with PKCE" title={title}>
-        {!tokenResponse && <ClientIdForm onTokenUpdate={(t) => {setTokenResponse(t);}} /> }
+        {<ClientIdForm onTokenUpdate={(t) => {setTokenResponse(t);}} /> }
         {tokenResponse && <SuccessMessage />}
       </PageIntro>
 
@@ -175,3 +176,4 @@ export default function Process() {
     </>
   )
 }
+export default PKCE;
