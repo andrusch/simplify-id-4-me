@@ -26,6 +26,7 @@ vscode:
         - wayou.vscode-todo-highlight
         - vscode-icons-team.vscode-icons
         - dbaeumer.vscode-eslint
+        - oderwat.indent-rainbow
 
 ports:
     - name: Web Site
